@@ -9,6 +9,7 @@ const READINGS = [
     chapter: 1,
     verses: "18-25",
     title: "La nascita di Gesù Cristo",
+  
     text: [
       { n: 18, t: "Così fu generato Gesù Cristo: sua madre Maria, essendo promessa sposa di Giuseppe, prima che andassero a vivere insieme si trovò incinta per opera dello Spirito Santo." },
       { n: 19, t: "Giuseppe suo sposo, poiché era uomo giusto e non voleva accusarla pubblicamente, pensò di ripudiarla in segreto." },
@@ -483,7 +484,6 @@ const READINGS = [
       { n: 20, t: "insegnando loro a osservare tutto ciò che vi ho comandato. Ed ecco, io sono con voi tutti i giorni, fino alla fine del mondo»." }
     ]
   },
-[
   // --- VANGELO SECONDO LUCA (Capitoli 1-24) ---
   {
     book: "Lc",
@@ -887,7 +887,7 @@ const READINGS = [
       { n: 35, t: "Essi poi riferirono ciò che era accaduto lungo la via e come l'avevano riconosciuto nello spezzare il pane." }
     ]
   },
-  [
+
   // --- VANGELO SECONDO GIOVANNI (Capitoli 1-21) ---
   {
     book: "Gv",
@@ -1221,7 +1221,6 @@ const READINGS = [
       { n: 19, t: "Questo disse per indicare con quale morte egli avrebbe glorificato Dio. E, detto questo, aggiunse: «Seguimi»." }
     ]
   },
-    [
   // --- VANGELO SECONDO MARCO (Capitoli 1-16) ---
   {
     book: "Mc",
@@ -1478,7 +1477,7 @@ const READINGS = [
       { n: 8, t: "Esse uscirono e fuggirono via dal sepolcro, perché erano piene di spavento e di stupore." }
     ]
   },
-      [
+  
   // --- LETTERA AI ROMANI (Capitoli 1-16) ---
   {
     book: "Rm",
@@ -1713,7 +1712,7 @@ const READINGS = [
       { n: 27, t: "a Dio, che solo è sapiente, per mezzo di Gesù Cristo, la gloria nei secoli. Amen." }
     ]
   },
-        [
+
   // --- 1 CORINZI (Capitoli 1-16) ---
   {
     book: "1Cor",
