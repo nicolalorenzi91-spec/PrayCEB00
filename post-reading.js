@@ -3448,20 +3448,49 @@ function isValidCycle(order, list) {
 }
 
 function shuffledOrder(list, seed) {
-  const length = list.length;
-  let attemptSeed = seed;
-  for (let attempt = 0; attempt < 500; attempt++) {
-    const order = [];
-    for (let i = 0; i < length; i++) order.push(i);
-    const rand = mulberry32(attemptSeed);
-    for (let i = order.length - 1; i > 0; i--) {
+  const rand = mulberry32(seed);
+
+  const groups = new Map();
+  list.forEach((item, idx) => {
+    if (!groups.has(item.book)) groups.set(item.book, []);
+    groups.get(item.book).push(idx);
+  });
+
+  for (const arr of groups.values()) {
+    for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
-      const tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+      const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
     }
-    if (isValidCycle(order, list)) return order;
-    attemptSeed += 1;
   }
-  throw new Error("Non riesco a trovare un ordine senza libri consecutivi ripetuti.");
+
+  let pool = Array.from(groups.entries()).map(([book, items]) => ({ book, items: items.slice() }));
+  const order = [];
+  let lastBook = null;
+
+  for (let step = 0; step < list.length; step++) {
+    pool.sort((a, b) => b.items.length - a.items.length);
+    const choice = pool.find(g => g.items.length > 0 && g.book !== lastBook);
+    if (!choice) {
+      throw new Error("Non è possibile evitare libri consecutivi ripetuti: un libro ha troppi brani rispetto agli altri.");
+    }
+    order.push(choice.items.shift());
+    lastBook = choice.book;
+    pool = pool.filter(g => g.items.length > 0);
+  }
+
+  if (list[order[order.length - 1]].book === list[order[0]].book) {
+    for (let i = 1; i < order.length - 1; i++) {
+      const bookI = list[order[i]].book;
+      if (bookI !== list[order[0]].book && bookI !== list[order[order.length - 1]].book) {
+        const tmp = order[order.length - 1];
+        order[order.length - 1] = order[i];
+        order[i] = tmp;
+        break;
+      }
+    }
+  }
+
+  return order;
 }
 
 const SHUFFLED_ORDER = shuffledOrder(READINGS, 20260913);
