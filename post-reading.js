@@ -3494,7 +3494,7 @@ function shuffledOrder(list, seed) {
 }
 
 const SHUFFLED_ORDER = shuffledOrder(READINGS, 20260913);
-const EPOCH = Date.UTC(2020, 0, 1);
+const EPOCH = Date.UTC(2026, 8, 18);
 
 function todayInRome() {
   const now = new Date();
