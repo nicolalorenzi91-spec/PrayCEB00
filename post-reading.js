@@ -2803,7 +2803,6 @@ const READINGS = [
       { n: 8, t: "Gesù Cristo è lo stesso ieri e oggi e per sempre!" }
     ]
   },
-          [
   // --- LETTERA DI GIACOMO (Capitoli 1-5) ---
   {
     book: "Giac",
