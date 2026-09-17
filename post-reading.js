@@ -3439,18 +3439,32 @@ function mulberry32(seed) {
   };
 }
 
-function shuffledOrder(length, seed) {
-  const order = [];
-  for (let i = 0; i < length; i++) order.push(i);
-  const rand = mulberry32(seed);
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(rand() * (i + 1));
-    const tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+function isValidCycle(order, list) {
+  for (let i = 0; i < order.length; i++) {
+    const next = (i + 1) % order.length;
+    if (list[order[i]].book === list[order[next]].book) return false;
   }
-  return order;
+  return true;
 }
 
-const SHUFFLED_ORDER = shuffledOrder(READINGS.length, 20260913);
+function shuffledOrder(list, seed) {
+  const length = list.length;
+  let attemptSeed = seed;
+  for (let attempt = 0; attempt < 500; attempt++) {
+    const order = [];
+    for (let i = 0; i < length; i++) order.push(i);
+    const rand = mulberry32(attemptSeed);
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      const tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+    }
+    if (isValidCycle(order, list)) return order;
+    attemptSeed += 1;
+  }
+  throw new Error("Non riesco a trovare un ordine senza libri consecutivi ripetuti.");
+}
+
+const SHUFFLED_ORDER = shuffledOrder(READINGS, 20260913);
 const EPOCH = Date.UTC(2020, 0, 1);
 
 function todayInRome() {
