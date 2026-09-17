@@ -3504,7 +3504,14 @@ function buildMessage(r) {
     "",
     `<a href="${buildLink(r)}">📎 Confronta con il testo CEI su BibbiaEDU</a>`,
     "",
-    "Condividete qui sotto cosa vi dice questo brano 🙏"
+    "💭 Per la tua riflessione:
+
+👂 Ascolta: Cosa senti che Dio ti sta dicendo attraverso queste parole?
+
+🤲 Custodisci: C'è un versetto che ti ha colpito in modo particolare, che risuona dentro di te o ti ha accompagnato in passato?
+
+🗣️ Condividi: Se vuoi, puoi lasciare un pensiero, una parola, un simbolo, un versetto o un breve messaggio vocale
+  🔑 Sentiamoci liberi di condividere: il modo in cui Dio parla a ciascuno di noi può diventare la chiave che apre lucchetti, scioglie i nodi e porta libertà nel cuore di chi ascolta."
   ].join("\n");
 }
 
