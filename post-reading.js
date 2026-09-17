@@ -3481,14 +3481,13 @@ function buildLink(r) {
 function buildMessage(r) {
   const verseText = r.text.map(v => `<b>${v.n}</b> ${escapeHtml(v.t)}`).join(" ");
   return [
-    "🌿 <b>La lettura di oggi</b>",
+    "🕊️ <b>La lettura di oggi</b>",
     "",
     `<b>${escapeHtml(r.name)} ${r.chapter},${r.verses}</b>`,
     `<i>${escapeHtml(r.title)}</i>`,
     "",
     verseText,
     "",
-    "<i>Traduzione: Riveduta 1927 (testo di pubblico dominio)</i>",
     `<a href="${buildLink(r)}">📎 Confronta con il testo CEI su BibbiaEDU</a>`,
     "",
     "Condividete qui sotto cosa vi dice questo brano 🙏"
