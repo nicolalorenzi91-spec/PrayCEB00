@@ -2,7 +2,6 @@
 // Richiede le variabili d'ambiente TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID.
 
 const READINGS = [
-[
   // --- VANGELO SECONDO MATTEO (Capitoli 1-28) ---
   {
     book: "Mt",
@@ -483,21 +482,7 @@ const READINGS = [
       { n: 19, t: "Andate dunque e fate discepoli tutti i popoli, battezzandoli nel nome del Padre e del Figlio e dello Spirito Santo," },
       { n: 20, t: "insegnando loro a osservare tutto ciò che vi ho comandato. Ed ecco, io sono con voi tutti i giorni, fino alla fine del mondo»." }
     ]
-  }
-]  {book:"Mt",name:"Matteo",chapter:5,verses:"1-12",title:"Le beatitudini",text:[
-    {n:1,t:"E Gesù, vedendo le folle, salì sul monte; e postosi a sedere, i suoi discepoli si accostarono a lui."},
-    {n:2,t:"Ed egli, aperta la bocca, li ammaestrava dicendo:"},
-    {n:3,t:"Beati i poveri in ispirito, perché di loro è il regno de' cieli."},
-    {n:4,t:"Beati quelli che fanno cordoglio, perché essi saranno consolati."},
-    {n:5,t:"Beati i mansueti, perché essi erederanno la terra."},
-    {n:6,t:"Beati quelli che sono affamati ed assetati della giustizia, perché essi saranno saziati."},
-    {n:7,t:"Beati i misericordiosi, perché a loro misericordia sarà fatta."},
-    {n:8,t:"Beati i puri di cuore, perché essi vedranno Iddio."},
-    {n:9,t:"Beati quelli che s'adoperano alla pace, perché essi saran chiamati figliuoli di Dio."},
-    {n:10,t:"Beati i perseguitati per cagion di giustizia, perché di loro è il regno dei cieli."},
-    {n:11,t:"Beati voi, quando v'oltraggeranno e vi perseguiteranno e, mentendo, diranno contro a voi ogni sorta di male per cagion mia."},
-    {n:12,t:"Rallegratevi e giubilate, perché il vostro premio è grande ne' cieli; poiché così hanno perseguitato i profeti che sono stati prima di voi."}
-  ]},
+  },
 [
   // --- VANGELO SECONDO LUCA (Capitoli 1-24) ---
   {
