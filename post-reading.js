@@ -3447,54 +3447,84 @@ function isValidCycle(order, list) {
   return true;
 }
 
-function shuffledOrder(list, seed) {
+function buildOrder(list, seed) {
   const rand = mulberry32(seed);
-
   const groups = new Map();
   list.forEach((item, idx) => {
     if (!groups.has(item.book)) groups.set(item.book, []);
     groups.get(item.book).push(idx);
   });
-
   for (const arr of groups.values()) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
       const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
     }
   }
-
-  let pool = Array.from(groups.entries()).map(([book, items]) => ({ book, items: items.slice() }));
   const order = [];
   let lastBook = null;
-
-  for (let step = 0; step < list.length; step++) {
-    pool.sort((a, b) => b.items.length - a.items.length);
-    const choice = pool.find(g => g.items.length > 0 && g.book !== lastBook);
-    if (!choice) {
-      throw new Error("Non è possibile evitare libri consecutivi ripetuti: un libro ha troppi brani rispetto agli altri.");
-    }
-    order.push(choice.items.shift());
-    lastBook = choice.book;
-    pool = pool.filter(g => g.items.length > 0);
-  }
-
-  if (list[order[order.length - 1]].book === list[order[0]].book) {
-    for (let i = 1; i < order.length - 1; i++) {
-      const bookI = list[order[i]].book;
-      if (bookI !== list[order[0]].book && bookI !== list[order[order.length - 1]].book) {
-        const tmp = order[order.length - 1];
-        order[order.length - 1] = order[i];
-        order[i] = tmp;
-        break;
+  let remaining = list.length;
+  while (remaining > 0) {
+    const books = [...groups.keys()].filter(b => groups.get(b).length > 0);
+    const candidates = books.filter(c => {
+      if (c === lastBook) return false;
+      const n = remaining - 1;
+      for (const x of books) {
+        const cnt = groups.get(x).length - (x === c ? 1 : 0);
+        const limit = (x === c) ? Math.floor(n / 2) : Math.ceil(n / 2);
+        if (cnt > limit) return false;
       }
+      return true;
+    });
+    if (candidates.length === 0) return null;
+    const total = candidates.reduce((s, b) => s + groups.get(b).length, 0);
+    let r = rand() * total;
+    let choice = candidates[candidates.length - 1];
+    for (const b of candidates) {
+      r -= groups.get(b).length;
+      if (r < 0) { choice = b; break; }
     }
+    order.push(groups.get(choice).shift());
+    lastBook = choice;
+    remaining--;
   }
-
   return order;
 }
 
-const SHUFFLED_ORDER = shuffledOrder(READINGS, 20260913);
-const EPOCH = Date.UTC(2026, 8, 18);
+function shuffledOrder(list, seed) {
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    const order = buildOrder(list, seed + attempt);
+    if (order && isValidCycle(order, list)) return order;
+  }
+  throw new Error("Non è possibile evitare libri consecutivi ripetuti: un libro ha troppi brani rispetto agli altri.");
+}
+
+const GIA_USCITI = [
+  "Matteo 12,9-14",
+  "Luca 15,11-24",
+  "Matteo 6,9-15",
+  "Luca 17,11-19",
+  "Matteo 25,1-13",
+  "Luca 4,16-22",
+  "Matteo 3,13-17",
+];
+
+function keyOf(r) {
+  return `${r.name} ${r.chapter},${r.verses}`;
+}
+
+const REMAINING_IDX = READINGS.map((r, i) => i).filter(i => !GIA_USCITI.includes(keyOf(READINGS[i])));
+const REMAINING = REMAINING_IDX.map(i => READINGS[i]);
+const FIRST_ROUND = REMAINING.length > 0
+  ? shuffledOrder(REMAINING, 20260913).map(i => REMAINING_IDX[i])
+  : [];
+
+let FULL_CYCLE = shuffledOrder(READINGS, 20260914);
+if (FIRST_ROUND.length > 0) {
+  const lastBook = READINGS[FIRST_ROUND[FIRST_ROUND.length - 1]].book;
+  const k = FULL_CYCLE.findIndex(i => READINGS[i].book !== lastBook);
+  FULL_CYCLE = FULL_CYCLE.slice(k).concat(FULL_CYCLE.slice(0, k));
+}
+const EPOCH = Date.UTC(2026, 8, 25);
 
 function todayInRome() {
   const now = new Date();
@@ -3509,8 +3539,12 @@ function todayInRome() {
 
 function readingForToday() {
   const dayNumber = Math.round((todayInRome() - EPOCH) / 86400000);
-  const pos = ((dayNumber % SHUFFLED_ORDER.length) + SHUFFLED_ORDER.length) % SHUFFLED_ORDER.length;
-  return READINGS[SHUFFLED_ORDER[pos]];
+  if (dayNumber >= 0 && dayNumber < FIRST_ROUND.length) {
+    return READINGS[FIRST_ROUND[dayNumber]];
+  }
+  const d = dayNumber - FIRST_ROUND.length;
+  const pos = ((d % FULL_CYCLE.length) + FULL_CYCLE.length) % FULL_CYCLE.length;
+  return READINGS[FULL_CYCLE[pos]];
 }
 
 function escapeHtml(s) {
@@ -3518,7 +3552,7 @@ function escapeHtml(s) {
 }
 
 function buildLink(r) {
-  return `https://www.bibbiaedu.it/CEI2008/nt/${r.book}/${r.chapter}/?sel=${r.chapter},${r.verses}`;
+  return `https://www.bibbiaedu.it/CEI2008/nt/${r.book}/${r.chapter}/?sel=${r.chapter},${r.verses.replace(/\s/g, "")}`;
 }
 
 function buildMessage(r) {
